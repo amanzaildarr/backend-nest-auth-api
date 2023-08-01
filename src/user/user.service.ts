@@ -1,11 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './database/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectModel(User.name)
+    private userModel: Model<User>,
+    // @InjectRepository(User)
+    // private userRepository: Repository<User>,
+  ) { }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    try {
+      // throw new HttpException("234",400)
+      const newUser = new this.userModel(createUserDto)
+      await newUser.save()
+      return newUser;
+    } catch (err) {
+      throw new HttpException("234",400)
+    }
   }
 
   findAll() {
