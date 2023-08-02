@@ -10,18 +10,15 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
-    // @InjectRepository(User)
-    // private userRepository: Repository<User>,
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      // throw new HttpException("234",400)
       const newUser = new this.userModel(createUserDto)
       await newUser.save()
       return newUser;
     } catch (err) {
-      throw new HttpException("234",400)
+      throw new HttpException("Something went wrong",400)
     }
   }
 
@@ -29,8 +26,9 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const User = await this.userModel.findById(id)
+    return User;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
