@@ -1,9 +1,10 @@
-import { HttpException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { CreateUserInput } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './database/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -12,14 +13,24 @@ export class UserService {
     private userModel: Model<User>,
   ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    try {
-      const newUser = new this.userModel(createUserDto)
-      await newUser.save()
-      return newUser;
-    } catch (err) {
-      throw new HttpException("Something went wrong",400)
+  async create(createUserInput: CreateUserInput) {
+
+    const isMailValid = await this.userModel.findOne({ email: createUserInput.email })
+    if (isMailValid) {
+      throw new BadRequestException('Email already exists');
     }
+    // encrypt password
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(createUserInput.password, salt)
+    
+    const newUser = new this.userModel(createUserInput)
+
+    newUser.password = hashedPassword;
+    await newUser.save()
+    
+    const { password, ...user } = newUser.toObject();
+
+    return newUser;
   }
 
   findAll() {
@@ -27,8 +38,9 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const User = await this.userModel.findById(id)
-    return User;
+    const user = await this.userModel.findById(id)
+    const { password, ...rest } = user.toObject()
+    return rest;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
