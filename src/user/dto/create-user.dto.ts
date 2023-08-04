@@ -7,9 +7,9 @@ export class CreateUserInput {
   @IsString()
   firstName: string;
 
-  @ApiProperty()
+  // @ApiProperty()
 //   @IsNotEmpty()
-  @IsString()
+  // @IsString()
   lastName: string;
 
   @ApiProperty()

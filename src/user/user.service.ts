@@ -43,8 +43,13 @@ export class UserService {
     return rest;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userModel.findById(id)
+    for (const key in updateUserDto) {
+      user[key] = updateUserDto[key]
+    }
+    await user.save()
+    return user;
   }
 
   remove(id: number) {
