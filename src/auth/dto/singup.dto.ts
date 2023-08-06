@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsNumber, IsEmail, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsEmail,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SignUpInput {
@@ -8,7 +14,7 @@ export class SignUpInput {
   firstName: string;
 
   @ApiProperty()
-//   @IsNotEmpty()
+  //   @IsNotEmpty()
   @IsString()
   lastName: string;
 

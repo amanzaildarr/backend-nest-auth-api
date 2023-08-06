@@ -1,9 +1,9 @@
 enum UserStatus {
-    Active = 'Active',
-    Inactive = 'Inactive',
+  Active = 'Active',
+  Inactive = 'Inactive',
 }
 enum Role {
-    User = 'user',
-    Admin = 'admin',
+  User = 'user',
+  Admin = 'admin',
 }
-export { UserStatus, Role }
+export { UserStatus, Role };

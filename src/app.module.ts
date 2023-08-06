@@ -3,18 +3,25 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { AcceptLanguageResolver, GraphQLWebsocketResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import * as path from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:".env",
-      isGlobal: true
+      envFilePath: '.env',
+      isGlobal: true,
     }),
-    UserModule,
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true, },
+      resolvers: [ GraphQLWebsocketResolver, { use: QueryResolver, options: ['lang'] }, AcceptLanguageResolver ],
+    }),
     MongooseModule.forRoot(process.env.DB_URI),
-    AuthModule
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
