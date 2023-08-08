@@ -22,6 +22,7 @@ export class AuthService {
     if (isMailValid) {
       throw new BadRequestException('Email already exists');
     }
+
     // encrypt password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(signUpInput.password, salt);
