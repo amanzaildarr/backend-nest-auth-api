@@ -13,6 +13,8 @@ import { UserService } from './user.service';
 import { CreateUserInput } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from './decorator/user.decorator';
+import { User } from './schemas/user.schema';
 
 @Controller('user')
 export class UserController {
@@ -30,8 +32,7 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(AuthGuard())
-  findOne(@Param('id') id: string, @Req() req: Request) {
-    // console.log('req.user', req.user);
+  findOne(@Param('id') id: string, @CurrentUser() user: User) {
     return this.userService.findOne(id);
   }
 

@@ -11,7 +11,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { I18nService } from 'nestjs-i18n';
-import { UserResponse } from './response/user.response';
 
 @Injectable()
 export class UserService {
@@ -49,13 +48,10 @@ export class UserService {
   async findOne(id: string) {
     const user = await this.userModel.findById(id);
     if (!user) {
-      throw new NotFoundException(this.i18n.t('user.OK'));
+      throw new NotFoundException(this.i18n.t('user.NOT_FOUND'));
     }
-    // const { password, ...rest } = user.toObject();
-    // console.log('user', user);
-    const res: UserResponse = user;
-    console.log('res', res);
-    return res;
+    const { password, ...rest } = user.toObject();
+    return rest;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
