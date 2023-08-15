@@ -13,7 +13,7 @@ export class AuthService {
     @InjectModel(User.name)
     private userModel: Model<User>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUp(signUpInput: SignUpInput) {
     const isMailValid = await this.userModel.findOne({
@@ -37,7 +37,7 @@ export class AuthService {
     return newUser;
   }
 
-  async login(loginInput: LoginInput): Promise<{ token: string }> {
+  async login(loginInput: LoginInput) {
     const user = await this.userModel.findOne({ email: loginInput.email });
 
     if (!user) {
@@ -47,8 +47,8 @@ export class AuthService {
     if (!isValid) {
       throw new BadRequestException('Password not valid');
     }
-    const token = this.jwtService.sign({ id: user._id });
+    const res = { ...user.toObject(), token: this.jwtService.sign({ id: user._id }) }
 
-    return { token };
+    return res;
   }
 }
