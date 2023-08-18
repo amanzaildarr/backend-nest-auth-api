@@ -15,19 +15,24 @@ import * as path from 'path';
 
 @Module({
   imports: [
+    // Load environment variables from .env file globally
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
     }),
+    
+    // Configure internationalization (i18n) module
     I18nModule.forRoot({
-      fallbackLanguage: 'en',
-      loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
+      fallbackLanguage: 'en', // Set fallback language
+      loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true }, // Set path for language files
       resolvers: [
-        GraphQLWebsocketResolver,
-        { use: QueryResolver, options: ['lang'] },
-        AcceptLanguageResolver,
+        GraphQLWebsocketResolver, // Resolver for GraphQL WebSockets
+        { use: QueryResolver, options: ['lang'] }, // Resolver for language query parameter
+        AcceptLanguageResolver, // Resolver for Accept-Language header
       ],
     }),
+    
+    // Configure Mongoose with the provided DB_URI
     MongooseModule.forRoot(process.env.DB_URI),
     UserModule,
     AuthModule,

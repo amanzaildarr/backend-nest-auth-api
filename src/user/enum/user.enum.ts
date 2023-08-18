@@ -3,7 +3,8 @@ enum UserStatus {
   Inactive = 'Inactive',
 }
 enum Role {
-  User = 'user',
+  Viewer = 'viewer',
+  Creator = 'creator',
   Admin = 'admin',
 }
 export { UserStatus, Role };

@@ -7,19 +7,7 @@ export type UserDocument = HydratedDocument<User>;
 @Schema({ timestamps: true })
 export class User {
   @Prop()
-  firstName: string;
-
-  @Prop()
-  lastName: string;
-
-  @Prop()
-  phone: string;
-
-  @Prop()
-  country: string;
-
-  @Prop()
-  age: number;
+  name: string;
 
   @Prop({ required: true, unique: true })
   email: string;
@@ -27,15 +15,27 @@ export class User {
   @Prop()
   password: string;
 
+  @Prop({ default: null})
+  socialProvider: string;
+
+  @Prop({ default: null})
+  providerAccountId: string;
+
   @Prop({ default: UserStatus.Active, enum: UserStatus })
   status: string;
 
-  @Prop({ default: Role.User, enum: Role })
+  @Prop({ default: Role.Viewer, enum: Role })
   role: string;
 
-  // get fullName(): string {
-  //   return `${this.firstName} ${this.lastName}`;
-  // }
+  @Prop({ default: false })
+  isMailVerified: boolean
+
+  @Prop({ default: null })
+  lastLogin: Date
+
+  @Prop({ default: null })
+  deletedAt: Date
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

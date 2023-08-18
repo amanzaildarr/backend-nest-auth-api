@@ -20,10 +20,10 @@ import { User } from './schemas/user.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserInput: CreateUserInput) {
-    return this.userService.create(createUserInput);
-  }
+  // @Post()
+  // create(@Body() createUserInput: CreateUserInput) {
+  //   return this.userService.create(createUserInput);
+  // }
 
   @Get()
   findAll() {

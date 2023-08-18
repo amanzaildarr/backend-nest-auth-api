@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { SignUpInput } from './dto/singup.dto';
 import { LoginInput } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { SocialLoginDto } from './dto/social.login.dto';
 
 @Injectable()
 export class AuthService {
@@ -38,6 +39,8 @@ export class AuthService {
   }
 
   async login(loginInput: LoginInput) {
+    console.log('loginInput',loginInput);
+    
     const user = await this.userModel.findOne({ email: loginInput.email });
 
     if (!user) {
@@ -50,5 +53,22 @@ export class AuthService {
     const res = { ...user.toObject(), token: this.jwtService.sign({ id: user._id }) }
 
     return res;
+  }
+
+  async socialLogin(socialLoginInput: SocialLoginDto) {
+
+    var User = await this.userModel.findOne({ email: socialLoginInput.email });
+
+    var token: string;
+
+    if (!User) {
+      User = new this.userModel(socialLoginInput);
+    }
+    User.lastLogin = new Date();
+    await User.save()
+
+    token = this.jwtService.sign({ id: User._id })
+
+    return {User,token};
   }
 }

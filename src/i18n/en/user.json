@@ -1,4 +1,5 @@
 {
     "OK":"Hiiiii",
-    "NOT_FOUND":"svlkdkv"
+    "NOT_FOUND":"svlkdkv",
+    "LOGIN": "Please do login first"
 }
