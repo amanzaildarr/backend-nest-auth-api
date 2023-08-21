@@ -1,5 +1,6 @@
 {
-    "OK":"Hiiiii",
+    "EMAIL_NOT_EXISTS":"Email not exists, Please try again.",
+    "MAIL_SENT":"Mail sent successfully to USER",
     "NOT_FOUND":"svlkdkv",
     "LOGIN": "Please do login first"
 }

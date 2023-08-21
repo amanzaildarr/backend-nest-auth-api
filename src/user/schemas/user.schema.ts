@@ -15,10 +15,10 @@ export class User {
   @Prop()
   password: string;
 
-  @Prop({ default: null})
+  @Prop({ default: 'credentials' })
   socialProvider: string;
 
-  @Prop({ default: null})
+  @Prop({ default: null })
   providerAccountId: string;
 
   @Prop({ default: UserStatus.Active, enum: UserStatus })
@@ -28,14 +28,13 @@ export class User {
   role: string;
 
   @Prop({ default: false })
-  isMailVerified: boolean
+  isMailVerified: boolean;
 
   @Prop({ default: null })
-  lastLogin: Date
+  lastLogin: Date;
 
   @Prop({ default: null })
-  deletedAt: Date
-
+  deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

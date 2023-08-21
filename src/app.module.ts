@@ -20,7 +20,7 @@ import * as path from 'path';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    
+
     // Configure internationalization (i18n) module
     I18nModule.forRoot({
       fallbackLanguage: 'en', // Set fallback language
@@ -31,7 +31,7 @@ import * as path from 'path';
         AcceptLanguageResolver, // Resolver for Accept-Language header
       ],
     }),
-    
+
     // Configure Mongoose with the provided DB_URI
     MongooseModule.forRoot(process.env.DB_URI),
     UserModule,
