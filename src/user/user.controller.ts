@@ -10,7 +10,6 @@ import {
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserInput } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './decorator/user.decorator';
@@ -20,12 +19,8 @@ import { User } from './schemas/user.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Post()
-  // create(@Body() createUserInput: CreateUserInput) {
-  //   return this.userService.create(createUserInput);
-  // }
-
   @Get()
+  @UseGuards(AuthGuard())
   findAll() {
     return this.userService.findAll();
   }
@@ -43,6 +38,6 @@ export class UserController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }

@@ -38,3 +38,8 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// // Add a static method to retrieve a user by email (where deletedAt is null)
+// UserSchema.statics.findByEmail = async function (email: string): Promise<UserDocument | null> {
+//   return this.findOne({ email, deletedAt: null }).exec();
+// };

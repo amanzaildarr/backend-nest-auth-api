@@ -1,15 +1,8 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as bcrypt from 'bcrypt';
 import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
@@ -20,29 +13,9 @@ export class UserService {
     private userModel: Model<User>,
   ) {}
 
-  async create(createUserInput: CreateUserInput) {
-    const isMailValid = await this.userModel.findOne({
-      email: createUserInput.email,
-    });
-    if (isMailValid) {
-      throw new BadRequestException('Email already exists');
-    }
-    // encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(createUserInput.password, salt);
-
-    const newUser = new this.userModel(createUserInput);
-
-    newUser.password = hashedPassword;
-    await newUser.save();
-
-    const { password, ...user } = newUser.toObject();
-
-    return newUser;
-  }
-
   findAll() {
-    return `This action returns all user`;
+    const Users = this.userModel.find({ deletedAt: null });
+    return Users;
   }
 
   async findOne(id: string) {
@@ -59,12 +32,11 @@ export class UserService {
     for (const key in updateUserDto) {
       user[key] = updateUserDto[key];
     }
-    await user.save();
-    return user;
-    // return UserResponse.decode(user);
+    return await user.save();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userModel.findByIdAndUpdate(id, { deletedAt: new Date() });
+    return { success: true, message: this.i18n.t('user.USER_DELETED') };
   }
 }

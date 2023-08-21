@@ -27,7 +27,6 @@ export class AuthService {
     private readonly i18n: I18nService,
   ) {}
 
-
   /**
    * Registers a new user.
    * @param signUpInput - The signup data including name, email, and password.
@@ -53,30 +52,28 @@ export class AuthService {
     return newUser;
   }
 
-  
   /**
    * Authenticates a user and returns a JWT token.
    * @param loginInput - The login data including email and password.
    * @returns An object with user data and JWT token.
    */
   async login(loginInput: LoginInput) {
-    const user = await this.userModel.findOne({ email: loginInput.email });
+    const User = await this.userModel.findOne({ email: loginInput.email });
 
-    if (!user) {
+    if (!User) {
       throw new BadRequestException(this.i18n.t('auth.INVALID_CREDENTIALS'));
     }
-    const isValid = await bcrypt.compare(loginInput.password, user.password);
+    const isValid = await bcrypt.compare(loginInput.password, User.password);
     if (!isValid) {
       throw new BadRequestException(this.i18n.t('auth.INVALID_CREDENTIALS'));
     }
     const res = {
-      ...user.toObject(),
-      token: this.jwtService.sign({ id: user._id }),
+      User,
+      token: this.jwtService.sign({ id: User._id }),
     };
 
     return res;
   }
-
 
   /**
    * Handles social login and returns user data and token.
@@ -100,7 +97,6 @@ export class AuthService {
     return { User, token };
   }
 
-
   /**
    * Sends a password reset link to the user's email.
    * @param sendLinkInput - The data including the user's email.
@@ -117,7 +113,6 @@ export class AuthService {
 
     return { success: true, message: this.i18n.t('user.MAIL_SENT') };
   }
-
 
   /**
    * Handles the password reset process.
@@ -150,8 +145,7 @@ export class AuthService {
     return { success: true, message: this.i18n.t('auth.PASSWORD_UPDATED') };
   }
 
-
-   /**
+  /**
    * Resets the user's password.
    * @param user - The user for whom the password is being reset.
    * @param resetPasswordDto - The data including old password, new password, and confirmation.
