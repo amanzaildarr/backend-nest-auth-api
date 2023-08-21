@@ -13,11 +13,21 @@ export class UserService {
     private userModel: Model<User>,
   ) {}
 
+  /**
+   * Retrieves all users where deletedAt is null.
+   * @returns A list of users.
+   */
   findAll() {
     const Users = this.userModel.find({ deletedAt: null });
     return Users;
   }
 
+  /**
+   * Retrieves a single user by ID.
+   * @param id - The ID of the user.
+   * @returns The user object without password.
+   * @throws NotFoundException if the user is not found.
+   */
   async findOne(id: string) {
     const user = await this.userModel.findById(id);
     if (!user) {
@@ -27,6 +37,12 @@ export class UserService {
     return rest;
   }
 
+  /**
+   * Updates a user by ID.
+   * @param id - The ID of the user.
+   * @param updateUserDto - The data to update the user.
+   * @returns The updated user object.
+   */
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findById(id);
     for (const key in updateUserDto) {
@@ -35,6 +51,11 @@ export class UserService {
     return await user.save();
   }
 
+  /**
+   * Soft deletes a user by setting deletedAt to the current date.
+   * @param id - The ID of the user to be deleted.
+   * @returns A response indicating success.
+   */
   async remove(id: string) {
     await this.userModel.findByIdAndUpdate(id, { deletedAt: new Date() });
     return { success: true, message: this.i18n.t('user.USER_DELETED') };
