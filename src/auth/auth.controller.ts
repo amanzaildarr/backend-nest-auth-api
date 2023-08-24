@@ -23,11 +23,6 @@ export class AuthController {
     return this.authService.socialLogin(socialLoginDto);
   }
 
-  @Post('/sendlink')
-  sendLink(@Body() sendLinkDto: SendLinkDto) {
-    return this.authService.sendLink(sendLinkDto);
-  }
-
   @Post('/forgotPassword')
   forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto);
@@ -40,5 +35,10 @@ export class AuthController {
     @CurrentUser() user: User,
   ) {
     return this.authService.resetPassword(user, resetPasswordDto);
+  }
+
+  @Post('/sendlink') // send forgotpassword link in mail
+  sendLink(@Body() sendLinkDto: SendLinkDto) {
+    return this.authService.sendLink(sendLinkDto);
   }
 }

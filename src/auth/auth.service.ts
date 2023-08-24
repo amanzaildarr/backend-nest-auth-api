@@ -25,7 +25,7 @@ export class AuthService {
     private userModel: Model<User>,
     private jwtService: JwtService,
     private readonly i18n: I18nService,
-  ) {}
+  ) { }
 
   /**
    * Registers a new user.
@@ -68,8 +68,8 @@ export class AuthService {
       throw new BadRequestException(this.i18n.t('auth.INVALID_CREDENTIALS'));
     }
     const res = {
-      User,
-      token: this.jwtService.sign({ id: User._id }),
+      user: User,
+      accessToken: this.jwtService.sign({ id: User._id }),
     };
 
     return res;
@@ -83,7 +83,7 @@ export class AuthService {
   async socialLogin(socialLoginInput: SocialLoginDto) {
     var User = await this.userModel.findOne({ email: socialLoginInput.email });
 
-    var token: string;
+    var accessToken: string;
 
     if (!User) {
       User = new this.userModel(socialLoginInput);
@@ -92,9 +92,9 @@ export class AuthService {
     User.lastLogin = new Date();
     User = await User.save();
 
-    token = this.jwtService.sign({ id: User._id });
+    accessToken = this.jwtService.sign({ id: User._id });
 
-    return { User, token };
+    return { user: User, accessToken };
   }
 
   /**
